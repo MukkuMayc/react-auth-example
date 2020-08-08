@@ -256,4 +256,45 @@ app.get("/proctoring", withAuth, (req, res) => {
   }
 });
 
+app.post("/massregister", function (req, res) {
+  const nothingIsMissing = (user, callback) => {
+    let status = { username: user.username, message: "", status: "fail" };
+    if (!user.username) status.message = "Username is missing";
+    else if (!user.email) status.message = "Email is missing";
+    else if (!user.password) status.message = "Password is missing";
+    else if (!user.first_name) status.message = "First name is missing";
+    else if (!user.second_name) status.message = "Last name is missing";
+    else status.status = "success";
+    return callback(status);
+  };
+
+  const parseUser = (user) => {
+    return nothingIsMissing(user, (status) => {
+      if (status.status === "fail") {
+        return status;
+      }
+      if (!/[a-z0-9_]+@[a-z0-9_]+.[a-z]/.test(user.email)) {
+        status.message = "Email isn't formatted correctly";
+        status.status = "fail";
+        return status;
+      }
+      return status;
+    });
+  };
+  const statuses = req.body.users.map((user) => parseUser(user));
+
+  console.log("statuses", statuses);
+
+  let resStatus;
+  if (statuses.some((user) => user.status !== "fail")) {
+    resStatus = 200;
+  } else {
+    resStatus = 400;
+  }
+
+  res.status(resStatus).json({
+    statuses: statuses,
+  });
+});
+
 app.listen(process.env.PORT || 8080);
