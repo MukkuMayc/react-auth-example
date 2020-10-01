@@ -31,11 +31,11 @@ mongoose.connect(mongo_uri, { useNewUrlParser: true }, function (err) {
   }
 });
 
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
+// app.get("/", function (req, res) {
+//   res.sendFile(path.join(__dirname, "public", "index.html"));
+// });
 
 app.get("/api/home", function (req, res) {
   res.send("Welcome!");
@@ -103,198 +103,122 @@ app.get("/checkToken", withAuth, function (req, res) {
   res.sendStatus(200);
 });
 
-app.get("/grade", withAuth, (req, res) => {
-  const credential = req.query.email || req.query.username;
-  switch (credential) {
-    case "ordinary": {
-      res.status(200).json({
-        courses: [
-          {
-            course_id: "course-v1:spbu+OLYMP+fall_2019",
-            grades: [{ grade_name: "Аудирование", grade: "0.334" }],
-          },
-          {
-            course_id: "course-v1:spbu+OLYMP_retake+fall_2019",
-            grades: [
-              { grade_name: "Чтение", grade: "0.5" },
-              { grade_name: "Лексика.Грамматика", grade: "0.8" },
-            ],
-          },
-        ],
-      });
-      break;
-    }
-    case "a@a.a": {
-      res.status(200).json({
-        courses: [
-          {
-            course_id: "course-v1:spbu+OLYMP+fall_2019",
-            grades: [{ grade_name: "Аудирование", grade: "0.334" }],
-          },
-          {
-            course_id: "course-v1:spbu+OLYMP_retake+fall_2019",
-            grades: [
-              { grade_name: "Чтение", grade: "0.5" },
-              { grade_name: "Лексика.Грамматика", grade: "0.8" },
-            ],
-          },
-        ],
-      });
-      break;
-    }
-    case "nogrades": {
-      res.status(200).json({
-        courses: [
-          {
-            course_id: "course-v1:spbu+OLYMP+fall_2019",
-          },
-          {
-            course_id: "course-v1:spbu+OLYMP_retake+fall_2019",
-          },
-        ],
-      });
-      break;
-    }
-    case "nocourses": {
-      res.status(200).json({
-        courses: [],
-      });
-      break;
-    }
-
-    default: {
-      res.status(404).send("There is no such user");
-    }
-  }
-});
-
-app.get("/proctoring", withAuth, (req, res) => {
-  const credential = req.query.email || req.query.username; //req.body.email || req.body.username ||
-  switch (credential) {
-    case "ordinary": {
-      res.status(200).json({
-        courses: [
-          {
-            course_id: "course-v1:spbu+OLYMP+fall_2019",
-            links: [{ test_name: "Аудирование", url: "https://test.com/1" }],
-          },
-          {
-            course_id: "course-v1:spbu+OLYMP_retake+fall_2019",
-            links: [
-              { test_name: "Чтение", url: "https://test.com/2" },
-              { test_name: "Лексика.Грамматика", url: "https://test.com/3" },
-            ],
-          },
-        ],
-      });
-      break;
-    }
-    case "a@a.a": {
-      res.status(200).json({
-        courses: [
-          {
-            course_id: "course-v1:spbu+OLYMP+fall_2019",
-            links: [{ test_name: "Аудирование", url: "https://test.com/1" }],
-          },
-          {
-            course_id: "course-v1:spbu+OLYMP_retake+fall_2019",
-            links: [
-              { test_name: "Чтение", url: "https://test.com/2" },
-              { test_name: "Лексика.Грамматика", url: "https://test.com/3" },
-            ],
-          },
-        ],
-      });
-      break;
-    }
-    case "nogrades": {
-      res.status(200).json({
-        courses: [
-          {
-            course_id: "course-v1:spbu+OLYMP+fall_2019",
-          },
-          {
-            course_id: "course-v1:spbu+OLYMP_retake+fall_2019",
-          },
-        ],
-      });
-      break;
-    }
-    case "nocourses": {
-      res.status(200).json({
-        courses: [],
-      });
-      break;
-    }
-
-    case "longlinks": {
-      res.status(200).json({
-        courses: [
-          {
-            course_id: "course-v1:spbu+OLYMP_retake+fall_2019",
-            links: [
-              {
-                test_name: "Чтение",
-                url:
-                  "https://www.google.com/imgres?imgurl=https%3A%2F%2Fi.ytimg.com%2Fvi%2FWl959QnD3lM%2Fmaxresdefault.jpg&imgrefurl=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DWl959QnD3lM&tbnid=YsuHKK6-7EWmGM&vet=12ahUKEwiY3LHoyofrAhVXxioKHTE7BQwQMygAegUIARClAQ..i&docid=ntkyOwngEaK1oM&w=1280&h=720&client=firefox-b-d&ved=2ahUKEwiY3LHoyofrAhVXxioKHTE7BQwQMygAegUIARClAQ",
-              },
-              {
-                test_name: "Лексика.Грамматика",
-                url:
-                  "https://www.google.com/imgres?imgurl=https%3A%2F%2Fi.ytimg.com%2Fvi%2FlaaUFxhzqIs%2Fmaxresdefault.jpg&imgrefurl=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DlaaUFxhzqIs&tbnid=T7a1m6XxAUxfkM&vet=12ahUKEwiY3LHoyofrAhVXxioKHTE7BQwQMyg9egQIARA7..i&docid=3cht7D2YcQ_9sM&w=1280&h=720&client=firefox-b-d&ved=2ahUKEwiY3LHoyofrAhVXxioKHTE7BQwQMyg9egQIARA7",
-              },
-            ],
-          },
-        ],
-      });
-      break;
-    }
-
-    default: {
-      res.status(404).send("There is no such user");
-    }
-  }
-});
-
-app.post("/massregister", function (req, res) {
-  const nothingIsMissing = (user, callback) => {
-    let status = { username: user.username, message: "", status: "fail" };
-    if (!user.username) status.message = "Username is missing";
-    else if (!user.email) status.message = "Email is missing";
-    else if (!user.password) status.message = "Password is missing";
-    else if (!user.first_name) status.message = "First name is missing";
-    else if (!user.second_name) status.message = "Last name is missing";
-    else status.status = "success";
-    return callback(status);
-  };
-
-  const parseUser = (user) => {
-    return nothingIsMissing(user, (status) => {
-      if (status.status === "fail") {
-        return status;
-      }
-      if (!/[a-z0-9_]+@[a-z0-9_]+.[a-z]/.test(user.email)) {
-        status.message = "Email isn't formatted correctly";
-        status.status = "fail";
-        return status;
-      }
-      return status;
-    });
-  };
-  const statuses = req.body.users.map((user) => parseUser(user));
-
-  console.log("statuses", statuses);
-
-  let resStatus;
-  if (statuses.some((user) => user.status !== "fail")) {
-    resStatus = 200;
-  } else {
-    resStatus = 400;
-  }
-
-  res.status(resStatus).json({
-    statuses: statuses,
+app.get("/courses", function (req, res) {
+  res.status(200).json({
+    courses: [
+      { id: 0, name: "name0", picture_url: "https://picsum.photos/300/200" },
+      { id: 1, name: "name1", picture_url: "https://picsum.photos/300/200" },
+      { id: 2, name: "name2", picture_url: "https://picsum.photos/300/200" },
+      { id: 3, name: "name3", picture_url: "https://picsum.photos/300/200" },
+      { id: 4, name: "name4", picture_url: "https://picsum.photos/300/200" },
+      { id: 5, name: "name5", picture_url: "https://picsum.photos/300/200" },
+      { id: 6, name: "name6", picture_url: "https://picsum.photos/300/200" },
+      { id: 7, name: "name7", picture_url: "https://picsum.photos/300/200" },
+      { id: 8, name: "name8", picture_url: "https://picsum.photos/300/200" },
+      { id: 9, name: "name9", picture_url: "https://picsum.photos/300/200" },
+      { id: 10, name: "name10", picture_url: "https://picsum.photos/300/200" },
+      { id: 11, name: "name11", picture_url: "https://picsum.photos/300/200" },
+      { id: 12, name: "name12", picture_url: "https://picsum.photos/300/200" },
+      { id: 13, name: "name13", picture_url: "https://picsum.photos/300/200" },
+      { id: 14, name: "name14", picture_url: "https://picsum.photos/300/200" },
+      { id: 15, name: "name15", picture_url: "https://picsum.photos/300/200" },
+      { id: 16, name: "name16", picture_url: "https://picsum.photos/300/200" },
+      { id: 17, name: "name17", picture_url: "https://picsum.photos/300/200" },
+      { id: 18, name: "name18", picture_url: "https://picsum.photos/300/200" },
+      { id: 19, name: "name19", picture_url: "https://picsum.photos/300/200" },
+      { id: 20, name: "name20", picture_url: "https://picsum.photos/300/200" },
+      { id: 21, name: "name21", picture_url: "https://picsum.photos/300/200" },
+      { id: 22, name: "name22", picture_url: "https://picsum.photos/300/200" },
+      { id: 23, name: "name23", picture_url: "https://picsum.photos/300/200" },
+      { id: 24, name: "name24", picture_url: "https://picsum.photos/300/200" },
+      { id: 25, name: "name25", picture_url: "https://picsum.photos/300/200" },
+      { id: 26, name: "name26", picture_url: "https://picsum.photos/300/200" },
+      { id: 27, name: "name27", picture_url: "https://picsum.photos/300/200" },
+      { id: 28, name: "name28", picture_url: "https://picsum.photos/300/200" },
+      { id: 29, name: "name29", picture_url: "https://picsum.photos/300/200" },
+      { id: 30, name: "name30", picture_url: "https://picsum.photos/300/200" },
+      { id: 31, name: "name31", picture_url: "https://picsum.photos/300/200" },
+      { id: 32, name: "name32", picture_url: "https://picsum.photos/300/200" },
+      { id: 33, name: "name33", picture_url: "https://picsum.photos/300/200" },
+      { id: 34, name: "name34", picture_url: "https://picsum.photos/300/200" },
+      { id: 35, name: "name35", picture_url: "https://picsum.photos/300/200" },
+      { id: 36, name: "name36", picture_url: "https://picsum.photos/300/200" },
+      { id: 37, name: "name37", picture_url: "https://picsum.photos/300/200" },
+      { id: 38, name: "name38", picture_url: "https://picsum.photos/300/200" },
+      { id: 39, name: "name39", picture_url: "https://picsum.photos/300/200" },
+      { id: 40, name: "name40", picture_url: "https://picsum.photos/300/200" },
+      { id: 41, name: "name41", picture_url: "https://picsum.photos/300/200" },
+      { id: 42, name: "name42", picture_url: "https://picsum.photos/300/200" },
+      { id: 43, name: "name43", picture_url: "https://picsum.photos/300/200" },
+      { id: 44, name: "name44", picture_url: "https://picsum.photos/300/200" },
+      { id: 45, name: "name45", picture_url: "https://picsum.photos/300/200" },
+      { id: 46, name: "name46", picture_url: "https://picsum.photos/300/200" },
+      { id: 47, name: "name47", picture_url: "https://picsum.photos/300/200" },
+      { id: 48, name: "name48", picture_url: "https://picsum.photos/300/200" },
+      { id: 49, name: "name49", picture_url: "https://picsum.photos/300/200" },
+      { id: 50, name: "name50", picture_url: "https://picsum.photos/300/200" },
+      { id: 51, name: "name51", picture_url: "https://picsum.photos/300/200" },
+      { id: 52, name: "name52", picture_url: "https://picsum.photos/300/200" },
+      { id: 53, name: "name53", picture_url: "https://picsum.photos/300/200" },
+      { id: 54, name: "name54", picture_url: "https://picsum.photos/300/200" },
+      { id: 55, name: "name55", picture_url: "https://picsum.photos/300/200" },
+      { id: 56, name: "name56", picture_url: "https://picsum.photos/300/200" },
+      { id: 57, name: "name57", picture_url: "https://picsum.photos/300/200" },
+      { id: 58, name: "name58", picture_url: "https://picsum.photos/300/200" },
+      { id: 59, name: "name59", picture_url: "https://picsum.photos/300/200" },
+      { id: 60, name: "name60", picture_url: "https://picsum.photos/300/200" },
+      { id: 61, name: "name61", picture_url: "https://picsum.photos/300/200" },
+      { id: 62, name: "name62", picture_url: "https://picsum.photos/300/200" },
+      { id: 63, name: "name63", picture_url: "https://picsum.photos/300/200" },
+      { id: 64, name: "name64", picture_url: "https://picsum.photos/300/200" },
+      { id: 65, name: "name65", picture_url: "https://picsum.photos/300/200" },
+      { id: 66, name: "name66", picture_url: "https://picsum.photos/300/200" },
+      { id: 67, name: "name67", picture_url: "https://picsum.photos/300/200" },
+      { id: 68, name: "name68", picture_url: "https://picsum.photos/300/200" },
+      { id: 69, name: "name69", picture_url: "https://picsum.photos/300/200" },
+      { id: 70, name: "name70", picture_url: "https://picsum.photos/300/200" },
+      { id: 71, name: "name71", picture_url: "https://picsum.photos/300/200" },
+      { id: 72, name: "name72", picture_url: "https://picsum.photos/300/200" },
+      { id: 73, name: "name73", picture_url: "https://picsum.photos/300/200" },
+      { id: 74, name: "name74", picture_url: "https://picsum.photos/300/200" },
+      { id: 75, name: "name75", picture_url: "https://picsum.photos/300/200" },
+      { id: 76, name: "name76", picture_url: "https://picsum.photos/300/200" },
+      { id: 77, name: "name77", picture_url: "https://picsum.photos/300/200" },
+      { id: 78, name: "name78", picture_url: "https://picsum.photos/300/200" },
+      { id: 79, name: "name79", picture_url: "https://picsum.photos/300/200" },
+      { id: 80, name: "name80", picture_url: "https://picsum.photos/300/200" },
+      { id: 81, name: "name81", picture_url: "https://picsum.photos/300/200" },
+      { id: 82, name: "name82", picture_url: "https://picsum.photos/300/200" },
+      { id: 83, name: "name83", picture_url: "https://picsum.photos/300/200" },
+      { id: 84, name: "name84", picture_url: "https://picsum.photos/300/200" },
+      { id: 85, name: "name85", picture_url: "https://picsum.photos/300/200" },
+      { id: 86, name: "name86", picture_url: "https://picsum.photos/300/200" },
+      { id: 87, name: "name87", picture_url: "https://picsum.photos/300/200" },
+      { id: 88, name: "name88", picture_url: "https://picsum.photos/300/200" },
+      { id: 89, name: "name89", picture_url: "https://picsum.photos/300/200" },
+      { id: 90, name: "name90", picture_url: "https://picsum.photos/300/200" },
+      { id: 91, name: "name91", picture_url: "https://picsum.photos/300/200" },
+      { id: 92, name: "name92", picture_url: "https://picsum.photos/300/200" },
+      { id: 93, name: "name93", picture_url: "https://picsum.photos/300/200" },
+      { id: 94, name: "name94", picture_url: "https://picsum.photos/300/200" },
+      { id: 95, name: "name95", picture_url: "https://picsum.photos/300/200" },
+      { id: 96, name: "name96", picture_url: "https://picsum.photos/300/200" },
+      { id: 97, name: "name97", picture_url: "https://picsum.photos/300/200" },
+      { id: 98, name: "name98", picture_url: "https://picsum.photos/300/200" },
+      { id: 99, name: "name99", picture_url: "https://picsum.photos/300/200" },
+    ],
   });
+});
+
+app.get("/course/:id", function (req, res) {
+  let id = req.id;
+  res
+    .status(200)
+    .json({
+      name: "namename",
+      description:
+        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.  Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut laboreet dolore magna aliquyam erat. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. ",
+    });
 });
 
 app.listen(process.env.PORT || 8080);
