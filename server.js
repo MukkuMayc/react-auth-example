@@ -7,10 +7,21 @@ const mongoose = require("mongoose");
 const User = require("./models/User");
 const withAuth = require("./middleware");
 const cors = require("cors");
+const http = require("http");
+const https = require("https");
+const fs = require("fs");
 
 const app = express();
 
 const secret = "mysecretsshhh";
+
+// credentials for https
+let privateKey = fs.readFileSync("./certs/server-key.pem");
+let certificate = fs.readFileSync("./certs/server-cert.pem");
+let credentials = {
+  key: privateKey,
+  cert: certificate,
+};
 
 const corsOptions = {
   origin: true,
@@ -628,4 +639,8 @@ app.get("/course/:id", function (req, res) {
   });
 });
 
-app.listen(process.env.PORT || 8080);
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(8080);
+httpsServer.listen(8443);
