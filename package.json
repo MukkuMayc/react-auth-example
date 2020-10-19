@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "bcrypt": "^3.0.0",
+    "bcrypt": "^3.0.8",
     "body-parser": "^1.18.3",
-    "cookie-parser": "^1.4.3",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
-    "mongoose": "^5.7.12"
+    "mongoose": "^5.10.9"
   },
   "scripts": {
     "server": "node server.js",
@@ -17,7 +17,7 @@
   },
   "proxy": "http://localhost:8080",
   "devDependencies": {
-    "nodemon": "^2.0.0"
+    "nodemon": "^2.0.5"
   },
   "browserslist": [
     ">0.2%",
